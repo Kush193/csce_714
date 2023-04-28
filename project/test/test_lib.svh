@@ -19,3 +19,5 @@
 `include "Test2_back_to_back_2_writes.sv"
 `include "Test3_reads_with_unique_tag_same_set.sv"
 `include "replacement_policy_check.sv"
+`include "Test4_write_all_proc_read_all_proc_same_addr.sv"
+`include "Test5_random_read_write_all_proc.sv"
