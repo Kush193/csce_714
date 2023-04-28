@@ -96,11 +96,25 @@ class system_bus_monitor_c extends uvm_monitor;
             if (vi_sbus_if.bus_rdx === 1'b1)
                 s_packet.bus_req_type = BUS_RDX; 
             
-            if (vi_sbus_if.invalid === 1'b1)
+            if (vi_sbus_if.invalidate === 1'b1)
                 s_packet.bus_req_type = INVALIDATE; 
             
            // if (vi_sbus_if.ica === 1'b1) //no idea about icache
-           //     s_packet.bus_req_type = INVALIDATE; 
+           //     s_packet.bus_req_type = INVALIDATE; bus_req_snoop 
+
+            //s_packet.bus_req_snoop = vi_sbus_if.bus_lv1_lv2_req_snoop;
+                if (vi_sbus_if.bus_lv1_lv2_req_snoop === 2'd0)
+                    s_packet.bus_req_snoop = 0; 
+                
+                if (vi_sbus_if.bus_lv1_lv2_req_snoop === 2'd1)
+                    s_packet.bus_req_snoop = 1; 
+
+                if (vi_sbus_if.bus_lv1_lv2_req_snoop === 2'd2)
+                    s_packet.bus_req_snoop = 2; 
+
+                if (vi_sbus_if.bus_lv1_lv2_req_snoop === 2'd3)
+                    s_packet.bus_req_snoop = 3; 
+
 
 
             // trigger point for creating the packet

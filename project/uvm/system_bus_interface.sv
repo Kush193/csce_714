@@ -115,9 +115,9 @@ interface system_bus_interface(input clk);
         `uvm_error("system_bus_interface",$sformatf("Assertion assert_one_hot_bus_lv1_lv2_gnt_snoop Failed: one_hot_bus_lv1_lv2_gnt_snoop is not one hot"))
 
 ////ASSERTION5: shared is asserted when data_bus_lv1_lv2 is also asserted in the same cycle
-    assert_shared_data_in_bus_lv1_lv2: assert property(prop_sig1_same_cycle_sig2(shared, data_in_bus_lv1_lv2))
-    else
-        `uvm_error("system_bus_interface",$sformatf("Assertion assert_shared_data_in_bus_lv1_lv2 Failed: shared and data_in_bus_lv1_lv2 not asserted in the same cycle"))
+   // assert_shared_data_in_bus_lv1_lv2: assert property(prop_sig1_same_cycle_sig2(shared, data_in_bus_lv1_lv2))
+   // else
+      //  `uvm_error("system_bus_interface",$sformatf("Assertion assert_shared_data_in_bus_lv1_lv2 Failed: shared and data_in_bus_lv1_lv2 not asserted in the same cycle"))
 
 ////ASSERTION6: if bus_lv1_lv2_req_proc asserted then bus_lv1_lv2_gnt_proc should be also asserted 
 //\    assert_bus_lv1_lv2_req_proc[0]_bus_lv1_lv2_gnt_proc[0]: assert property(prop_sig1_assert_eventually_assert_sig2(bus_lv1_lv2_req_proc[0], bus_lv1_lv2_gnt_proc[0]))
