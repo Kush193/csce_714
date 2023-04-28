@@ -134,7 +134,7 @@ module main_func_lv1_dl #(
         addr_bus_lv1_lv2_reg    <= 32'hz;
         data_in_bus_lv1_lv2_reg <= 1'bz;
         invalidate_reg          <= 1'bz;
-        bus_rd_reg             <= 1'bz;   //BUG 2 Fix
+        bus_rd_reg             <= 1'bz;  //Bug broken
         bus_rdx_reg             <= 1'bz;
         invalidation_done       <= 1'b0;
         bus_lv1_lv2_req_proc_dl <= 1'b0;
@@ -145,7 +145,7 @@ module main_func_lv1_dl #(
         shared_local            <= 1'b0;
         cpu_wr_done             <= 1'b0;
         cp_in_cache             <= 1'b0;
-
+        
         // proc side
         if(cpu_rd && blk_hit_proc) begin
             data_bus_cpu_lv1_reg   <= cache_var[{index_proc,blk_access_proc}];
@@ -219,7 +219,7 @@ module main_func_lv1_dl #(
                 case (`CACHE_CURRENT_MESI_PROC)
                     SHARED: begin
                         if(bus_lv1_lv2_gnt_proc) begin
-                            invalidate_reg       <= 1'b1;
+                            invalidate_reg       <= 1'bz;
                             bus_rd_reg           <= 1'b0;
                             bus_rdx_reg          <= 1'b0;
                             addr_bus_lv1_lv2_reg <= {tag_proc,index_proc,2'b00};

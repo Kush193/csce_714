@@ -133,10 +133,10 @@ interface system_bus_interface(input clk);
     else
         `uvm_error("system_bus_interface",$sformatf("Assertion assert_bus_lv1_lv2_gnt_proc_lv2_rd_or_lv2_wr Failed: bus_lv1_lv2_gnt_proc is asserted and lv2_rd or lv2_wr is not asserted eventually"))
 
-////ASSERTION7: if bus_rd  is asserted then and lv2_rd should be also asserted  
+////ASSERTION7: if bus_rd or bus_rdx is asserted then and lv2_rd should be also asserted  
     assert_bus_rd_and_lv2_rd: assert property(prop_sig1_same_cycle_sig2(lv2_rd, (bus_rd || bus_rdx)))
     else
-        `uvm_error("system_bus_interface",$sformatf("Assertion assert_bus_rd_and_lv2_rd Failed: bus_rd and lv2_rd are not asserted in same cylce"))
+        `uvm_error("system_bus_interface",$sformatf("Assertion assert_bus_rd_and_lv2_rd Failed: Neither bus_rd nor bus_rdx is asserted in same cylce when lv2_rd is asserted"))
 
 ////ASSERTION8: if cp_in_cache is asserted then and bus_lv1_lv2_req_snoop should be also asserted  
     assert_lv2_wr_done_data_in_bus: assert property(prop_sig1_assert_eventually_assert_sig2(lv2_wr_done, data_in_bus_lv1_lv2))

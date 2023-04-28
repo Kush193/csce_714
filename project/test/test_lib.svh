@@ -15,3 +15,5 @@
 `include "random_read_write_all_proc.sv"
 `include "invalidation_test.sv"
 `include "read_followed_by_write.sv"
+`include "Test1_back_to_back_2_reads.sv"
+`include "Test2_back_to_back_2_writes.sv"

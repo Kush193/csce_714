@@ -65,5 +65,15 @@ class cpu_transaction_c extends uvm_sequence_item;
 
 //TODO: Add meaningful constraints
 
-endclass : cpu_transaction_c
+endclass : cpu_transaction_c 
+
+// class constraint_addr_gen;
+//     rand bit [15:0] tag;
+//     rand bit [13:0] index;
+//     rand bit [1:0] offset;
+
+//     constraint unique_tag {unique {tag};}
+
+
+// endclass: constraint_addr_gen
 
