@@ -40,6 +40,7 @@ class Test3_reads_with_unique_tag_same_set_seq extends base_vseq;
     bit [1:0] offset;
 
     int cpu_num; 
+    int ok;
 
     cpu_transaction_c trans;
 
@@ -65,7 +66,7 @@ class Test3_reads_with_unique_tag_same_set_seq extends base_vseq;
                 offset = 0;
                 for(int i =0; i<4; i++) begin
                     addr[i] = {tag + i, index, offset};
-                    `uvm_do_on_with(trans, p_sequencer.cpu_seqr[cpu_num], {request_type == READ_REQ; access_cache_type == DCACHE_ACC; address == addr;})
+                    `uvm_do_on_with(trans, p_sequencer.cpu_seqr[cpu_num], {request_type == READ_REQ; access_cache_type == DCACHE_ACC; address == addr[i];})
 
                 end
 
