@@ -25,8 +25,24 @@ interface cpu_lv1_interface(input clk);
 
     assign data_bus_cpu_lv1 = data_bus_cpu_lv1_reg ;
 
+//Properties
+    property prop_signal2_before_signal1(signal1,signal2);
+        @(posedge clk)
+          $rose(signal2) |=> $fell(signal1);
+    endproperty
+
+    property prop_signal2_deassert_after_signal1_deassert(signal1,signal2);
+        @(posedge clk)
+          $fell(signal1) |-> $fell(signal1) ##[1:$] $fell(signal2);
+    endproperty
+
+    property prop_signal2_assert_after_signal1_assert(signal1,signal2);
+        @(posedge clk)
+          $rose(signal1) |-> $rose(signal1) ##[1:$] $rose(signal2);
+    endproperty  
+
 //Assertions
-//ASSERTION1: cpu_wr and cpu_rd should not be asserted at the same clock cycle
+//ASSERTION1: cpu_wr and cpu_rd should not be asserted at the same clock cycle 
     property prop_simult_cpu_wr_rd;
         @(posedge clk)
           not(cpu_rd && cpu_wr);
@@ -37,6 +53,26 @@ interface cpu_lv1_interface(input clk);
         `uvm_error("cpu_lv1_interface",$sformatf("Assertion assert_simult_cpu_wr_rd Failed: cpu_wr and cpu_rd asserted simultaneously"))
 
 //TODO: Add assertions at this interface
+
+//ASSERTION2: cpu_wr_done is asserted 1 cycle before cpu_wr is deasserted
+    assert_cpu_wr_done_before_cpu_wr: assert property (prop_signal2_before_signal1(cpu_wr, cpu_wr_done))
+    else
+        `uvm_error("cpu_lv1_interface",$sformatf("Assertion assert_cpu_wr_done_before_cpu_wr Failed: cpu_wr_done is not asserted one cycle before cpu_wr is deasserted"))
+
+//ASSERTION3: cpu_wr_done is deasserted after cpu_wr is deasserted
+    assert_cpu_wr_done_deassert_cpu_wr_deassert: assert property (prop_signal2_deassert_after_signal1_deassert(cpu_wr, cpu_wr_done))
+    else
+        `uvm_error("cpu_lv1_interface",$sformatf("Assertion assert_cpu_wr_done_deassert_cpu_wr_deassert Failed: cpu_wr_done is not deasserted after cpu_wr is deasserted"))
+
+//ASSERTION4: cpu_wr_done is asserted after cpu_wr is asserted
+    assert_cpu_wr_done_assert_cpu_wr_assert: assert property (prop_signal2_assert_after_signal1_assert(cpu_wr, cpu_wr_done))
+    else
+        `uvm_error("cpu_lv1_interface",$sformatf("Assertion assert_cpu_wr_done_assert_cpu_wr_assert Failed: cpu_wr_done is not asserted after cpu_wr is asserted"))
+
+//ASSERTION5: data_in_bus_cpu_lv1 is asserted after cpu_rd is asserted
+    assert_data_in_bus_cpu_lv1_cpu_rd_assert: assert property (prop_signal2_assert_after_signal1_assert(cpu_rd, data_in_bus_cpu_lv1))
+    else
+        `uvm_error("cpu_lv1_interface",$sformatf("Assertion assert_data_in_bus_cpu_lv1_cpu_rd_assert Failed: data_in_bus_cpu_lv1 is not asserted after cpu_rd is asserted"))
 
 
 endinterface

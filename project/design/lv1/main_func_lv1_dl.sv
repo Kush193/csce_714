@@ -104,7 +104,8 @@ module main_func_lv1_dl #(
     assign addr_bus_lv1_lv2    = addr_bus_lv1_lv2_reg;
     assign data_bus_cpu_lv1    = data_bus_cpu_lv1_reg;
     assign data_in_bus_lv1_lv2 = data_in_bus_lv1_lv2_reg;
-    assign bus_rd              = bus_rdx_reg;
+    //assign bus_rd              = bus_rdx_reg;
+    assign bus_rd              = bus_rd_reg; //BUG1_FIX
     assign bus_rdx             = bus_rdx_reg;
     assign invalidate          = invalidate_reg;
 
@@ -133,7 +134,7 @@ module main_func_lv1_dl #(
         addr_bus_lv1_lv2_reg    <= 32'hz;
         data_in_bus_lv1_lv2_reg <= 1'bz;
         invalidate_reg          <= 1'bz;
-        bus_rdx_reg             <= 1'bz;
+        bus_rd_reg             <= 1'bz;   //BUG 2 Fix
         bus_rdx_reg             <= 1'bz;
         invalidation_done       <= 1'b0;
         bus_lv1_lv2_req_proc_dl <= 1'b0;
@@ -190,7 +191,7 @@ module main_func_lv1_dl #(
                             addr_bus_lv1_lv2_reg <= {`CACHE_CURRENT_TAG_PROC,index_proc,2'b00};
                             lv2_wr               <= 1'b1;
                             data_bus_lv1_lv2_reg <= cache_var[{index_proc,blk_access_proc}];
-                            if(lv2_wr) begin
+                            if(lv2_wr_done) begin                     //BUG 4 FIX
                                 `CACHE_CURRENT_MESI_PROC <= INVALID;
                                  addr_bus_lv1_lv2_reg    <= 32'hz;
                                  lv2_wr                  <= 1'b0;
@@ -257,7 +258,7 @@ module main_func_lv1_dl #(
                         bus_lv1_lv2_req_proc_dl                 <= 1'b0;
                         lv2_rd                                  <= 1'b0;
                         bus_rd_reg                              <= 1'b0;
-                        bus_rd_reg                              <= 1'b0;
+                        bus_rdx_reg                              <= 1'b0;  //BUG 3 : Fix
                         invalidate_reg                          <= 1'b0;
                         addr_bus_lv1_lv2_reg                    <= 32'hz;
                     end
@@ -296,8 +297,10 @@ module main_func_lv1_dl #(
                 shared_local              <= 1'b1;
                 `CACHE_CURRENT_MESI_SNOOP <= INVALID;
                 invalidation_done         <= 1'b1;
+                $display("inside snoop");
             end
             else if(bus_rdx) begin
+                 $display("inside snoop rdx");
                 cp_in_cache           <= 1'b1;
                 case (`CACHE_CURRENT_MESI_SNOOP)
                     SHARED: begin

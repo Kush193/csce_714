@@ -27,6 +27,27 @@ class system_bus_monitor_c extends uvm_monitor;
             option.auto_bin_max = 20;
         }
         //TODO: Add coverage for other fields of sbus_mon_packet
+        //LAB6: TO DO: Add coverage for other fields of sbus_mon_packet
+        REQ_SNOOP: coverpoint s_packet.bus_req_snoop;
+        REQ_SERVICED_BY: coverpoint s_packet.req_serviced_by;
+        WR_DATA_SNOOP: coverpoint s_packet.wr_data_snoop{
+            option.auto_bin_max = 20;
+        }
+        SNOOP_WR_REQ_FLAG: coverpoint s_packet.snoop_wr_req_flag;
+        CP_IN_CACHE: coverpoint s_packet.cp_in_cache;
+        IS_SHARED: coverpoint s_packet.shared;
+        SERVICE_TIME: coverpoint s_packet.service_time{
+            option.auto_bin_max = 20;
+        }
+
+        EVICT_DIRTY_BLK_ADDR: coverpoint s_packet.proc_evict_dirty_blk_addr{
+            option.auto_bin_max = 20;
+        }
+        EVICT_DIRTY_BLK_DATA: coverpoint s_packet.proc_evict_dirty_blk_data{
+            option.auto_bin_max = 20;
+        } 
+        EVICT_DIRTY_BLK_FLAG: coverpoint s_packet.proc_evict_dirty_blk_flag;       
+
 
         //cross coverage
         //ensure each processor has read miss, write miss, invalidate, etc.
@@ -34,6 +55,13 @@ class system_bus_monitor_c extends uvm_monitor;
         X_PROC__ADDRESS: cross REQUEST_PROCESSOR, REQUEST_ADDRESS;
         X_PROC__DATA: cross REQUEST_PROCESSOR, READ_DATA;
         //TODO: Add relevant cross coverage (examples shown above)
+        //LAB6: TO DO: Add relevant cross coverage (examples shown above)
+        X_PROC__EVICT_ADDR: cross REQUEST_PROCESSOR, EVICT_DIRTY_BLK_ADDR;
+        X_PROC__EVICT_DATA: cross REQUEST_PROCESSOR, EVICT_DIRTY_BLK_DATA;
+        X_PROC__SNOOP_WR_REQ_FLAG:cross REQUEST_PROCESSOR, SNOOP_WR_REQ_FLAG;
+        X_PROC__CP_IN_CACHE:      cross REQUEST_PROCESSOR, CP_IN_CACHE;
+        X_PROC__SHARED:           cross REQUEST_PROCESSOR, IS_SHARED;
+   
     endgroup
 
     // Virtual interface of used to observe system bus interface signals
@@ -62,6 +90,19 @@ class system_bus_monitor_c extends uvm_monitor;
         //Add code to observe other cases
         //Add code for dirty block eviction
         //Snoop requests, service time, etc
+        
+        //Added code //FIX
+            // bus request type:
+            if (vi_sbus_if.bus_rdx === 1'b1)
+                s_packet.bus_req_type = BUS_RDX; 
+            
+            if (vi_sbus_if.invalid === 1'b1)
+                s_packet.bus_req_type = INVALIDATE; 
+            
+           // if (vi_sbus_if.ica === 1'b1) //no idea about icache
+           //     s_packet.bus_req_type = INVALIDATE; 
+
+
             // trigger point for creating the packet
             @(posedge (|vi_sbus_if.bus_lv1_lv2_gnt_proc));
             `uvm_info(get_type_name(), "Packet creation triggered", UVM_LOW)
@@ -81,7 +122,7 @@ class system_bus_monitor_c extends uvm_monitor;
                 end : shared_check
             join_none
 
-            // bus request type
+            // bus request type 
             if (vi_sbus_if.bus_rd === 1'b1)
                 s_packet.bus_req_type = BUS_RD;
 
