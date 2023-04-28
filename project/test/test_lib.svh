@@ -18,3 +18,4 @@
 `include "Test1_back_to_back_2_reads.sv"
 `include "Test2_back_to_back_2_writes.sv"
 `include "Test3_reads_with_unique_tag_same_set.sv"
+`include "replacement_policy_check.sv"

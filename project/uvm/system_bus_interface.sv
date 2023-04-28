@@ -82,7 +82,7 @@ interface system_bus_interface(input clk);
     property no_assert_sig1_and_sig2(signal_1,signal_2);
       @(posedge clk)
          not(signal_1 && signal_2);
-    endproperty
+    endproperty  
 
 
 //ASSERTION1: lv2_wr_done should not be asserted without lv2_wr being asserted in previous cycle
@@ -100,7 +100,7 @@ interface system_bus_interface(input clk);
     else
         `uvm_error("system_bus_interface",$sformatf("Assertion assert_lvl2_rd_&_cp_in_cache Failed: lvl2_rd not asserted before cp_in_cache goes high"))
 
-    assert_lvl2_rd_data_bus_lv1_lv2: assert property (prop_sig1_before_sig2(lv2_rd, data_bus_lv1_lv2)) 
+    assert_lvl2_rd_data_in_bus_lv1_lv2: assert property (prop_sig1_before_sig2(lv2_rd, data_in_bus_lv1_lv2)) 
     else
         `uvm_error("system_bus_interface",$sformatf("Assertion assert_lvl2_rd_&_data_bus_lv1_lv2 Failed: lv2_rd not asserted before data_bus_lv1_lv2 goes high"))
 
@@ -184,7 +184,7 @@ assert_lv2_wr: assert property(deassert_sig1_after_sig2_assert(lv2_wr,lv2_wr_don
 ////ASSERTION17: bus_rd and bus_rdx cannot be asserted simultaneously.
 assert_no_bus_rd_and_bus_rdx: assert property (no_assert_sig1_and_sig2(bus_rd,bus_rdx))
     else
-        `uvm_error("system_bus_interface",$sformatf("Assertion assert_no_bus_rd_and_bus_rdx Failed: bus_rd and bus_rdx asserted simultaneously"))       
+        `uvm_error("system_bus_interface",$sformatf("Assertion assert_no_bus_rd_and_bus_rdx Failed: bus_rd and bus_rdx asserted simultaneously"))        
 
 
 endinterface
