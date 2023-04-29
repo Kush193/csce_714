@@ -67,13 +67,13 @@ class cpu_transaction_c extends uvm_sequence_item;
 
 endclass : cpu_transaction_c 
 
-// class constraint_addr_gen;
-//     rand bit [15:0] tag;
-//     rand bit [13:0] index;
-//     rand bit [1:0] offset;
+/* class constraint_addr_gen;
+    rand bit [15:0] tag;
+    rand bit [13:0] index;
+    rand bit [1:0] offset;
 
-//     constraint unique_tag {unique {tag};}
+    constraint unique_tag {unique {tag};}
 
 
-// endclass: constraint_addr_gen
-
+endclass: constraint_addr_gen
+ */

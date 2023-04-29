@@ -43,6 +43,7 @@ class read_miss_dcache_seq extends base_vseq;
 
     virtual task body();
         `uvm_do_on_with(trans, p_sequencer.cpu_seqr[mp], {request_type == READ_REQ; access_cache_type == DCACHE_ACC;})
+        $display("trans_data=%h", trans.data);
     endtask
 
 endclass : read_miss_dcache_seq

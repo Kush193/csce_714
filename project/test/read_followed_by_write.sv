@@ -35,6 +35,9 @@ class read_followed_by_write_seq extends base_vseq;
     `uvm_object_utils(read_followed_by_write_seq)
 
     cpu_transaction_c trans;
+    cpu_transaction_c trans_1;
+
+    bit [31:0]   test_data = 32'hdeadbeef;
 
     //constructor
     function new (string name="read_followed_by_write_seq");
@@ -47,9 +50,9 @@ class read_followed_by_write_seq extends base_vseq;
 
         `uvm_do_on_with(trans, p_sequencer.cpu_seqr[1], {request_type == READ_REQ; access_cache_type == DCACHE_ACC; address == 32'h7905c2ff;})
 
-        `uvm_do_on_with(trans, p_sequencer.cpu_seqr[0], {request_type == WRITE_REQ; access_cache_type == DCACHE_ACC; address == 32'h7905c2ff; data == 32'hdeadbeef;})
+        `uvm_do_on_with(trans, p_sequencer.cpu_seqr[0], {request_type == WRITE_REQ; access_cache_type == DCACHE_ACC; address == 32'h7905c2ff; data == test_data;})
         
-        `uvm_do_on_with(trans, p_sequencer.cpu_seqr[1], {request_type == READ_REQ; access_cache_type == DCACHE_ACC; address == 32'h7905c2ff;})
+        `uvm_do_on_with(trans_1, p_sequencer.cpu_seqr[1], {request_type == READ_REQ; access_cache_type == DCACHE_ACC; address == 32'h7905c2ff;})
 
     endtask
 

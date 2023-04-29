@@ -31,6 +31,11 @@ interface cpu_lv1_interface(input clk);
           $rose(signal2) |=> $fell(signal1);
     endproperty
 
+    property prop_sig2_deassert_before_sig1(signal_1,signal_2);
+    @(posedge clk)
+        ($past(signal_2) && (!signal_2))  |-> $past(signal_1);
+    endproperty
+
     property prop_signal2_deassert_after_signal1_deassert(signal1,signal2);
         @(posedge clk)
           $fell(signal1) |-> $fell(signal1) ##[1:$] $fell(signal2);
@@ -74,5 +79,9 @@ interface cpu_lv1_interface(input clk);
     else
         `uvm_error("cpu_lv1_interface",$sformatf("Assertion assert_data_in_bus_cpu_lv1_cpu_rd_assert Failed: data_in_bus_cpu_lv1 is not asserted after cpu_rd is asserted"))
 
+////ASSERTION6: if cpu_wr deasserted then in previous cyle cpu_wr_done should be high
+assert_cpu_wr_cpu_wr_done: assert property (prop_sig2_deassert_before_sig1(cpu_wr_done,cpu_wr))
+    else
+        `uvm_error("system_bus_interface",$sformatf("Assertion assert_cpu_wr_cpu_wr_done Failed: when cpu_wr deasserted then in previous cyle cpu_wr_done is not high"))  
 
 endinterface

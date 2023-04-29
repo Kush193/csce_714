@@ -219,7 +219,7 @@ module main_func_lv1_dl #(
                 case (`CACHE_CURRENT_MESI_PROC)
                     SHARED: begin
                         if(bus_lv1_lv2_gnt_proc) begin
-                            invalidate_reg       <= 1'bz;
+                            invalidate_reg       <= 1'b1; //Fix: Bug 5
                             bus_rd_reg           <= 1'b0;
                             bus_rdx_reg          <= 1'b0;
                             addr_bus_lv1_lv2_reg <= {tag_proc,index_proc,2'b00};
@@ -353,7 +353,7 @@ module main_func_lv1_dl #(
         else if(!blk_hit_snoop && (bus_lv1_lv2_gnt_proc != 1'b1)) begin
             // invalidation_done should be high for one cycle only
             if(invalidate && !invalidation_done) begin
-                invalidate_reg         <= 1'b1;
+                invalidation_done         <= 1'b1; //Bug Fix 6
             end
         end
     end

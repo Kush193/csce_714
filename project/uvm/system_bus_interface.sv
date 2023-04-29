@@ -42,6 +42,11 @@ interface system_bus_interface(input clk);
         signal_2 |-> $past(signal_1);
     endproperty
 
+    property prop_sig2_deassert_before_sig1(signal_1,signal_2);
+    @(posedge clk)
+        $fell(signal_2) |-> $past(signal_1);
+    endproperty
+
     property is_one_hot(signal);
     @(posedge clk)
         signal |-> $onehot(signal);
@@ -185,6 +190,8 @@ assert_lv2_wr: assert property(deassert_sig1_after_sig2_assert(lv2_wr,lv2_wr_don
 assert_no_bus_rd_and_bus_rdx: assert property (no_assert_sig1_and_sig2(bus_rd,bus_rdx))
     else
         `uvm_error("system_bus_interface",$sformatf("Assertion assert_no_bus_rd_and_bus_rdx Failed: bus_rd and bus_rdx asserted simultaneously"))       
+
+
 
 
 endinterface
