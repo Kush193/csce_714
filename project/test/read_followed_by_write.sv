@@ -34,25 +34,62 @@ class read_followed_by_write_seq extends base_vseq;
     //object macro
     `uvm_object_utils(read_followed_by_write_seq)
 
-    cpu_transaction_c trans;
+    cpu_transaction_c trans[4];
     cpu_transaction_c trans_1;
+    bit [31:0] addr[2];
 
     bit [31:0]   test_data = 32'hdeadbeef;
+    bit [31:0]   test_data_1 = 32'hdeadbeed;
+    bit [31:0]   test_data_2 = 32'hdeadbeec;
+    int index;
 
     //constructor
     function new (string name="read_followed_by_write_seq");
         super.new(name);
     endfunction : new
 
+            task cpu_transaction(int cpuID);
+                
+                addr[0] = 32'h7905c2ff;
+                addr[1] = 32'h8016d5d0;
+                repeat(20)begin
+                    index = $urandom_range(0,1);
+                    if(cpuID == 0 || cpuID == 1) 
+                        `uvm_do_on_with(trans[cpuID], p_sequencer.cpu_seqr[cpuID], {request_type == WRITE_REQ; access_cache_type == DCACHE_ACC; address == addr[index];})
+                    else 
+                        `uvm_do_on_with(trans[cpuID], p_sequencer.cpu_seqr[cpuID], {request_type == READ_REQ; access_cache_type == DCACHE_ACC; address == addr[index];})
+                    end
+            endtask
+
     virtual task body();
         //`uvm_do_on_with(trans, p_sequencer.cpu_seqr[mp], {request_type == READ_REQ; access_cache_type == DCACHE_ACC;})
-        `uvm_do_on_with(trans, p_sequencer.cpu_seqr[0], {request_type == READ_REQ; access_cache_type == DCACHE_ACC; address == 32'h7905c2ff;})
+        //`uvm_do_on_with(trans, p_sequencer.cpu_seqr[0], {request_type == READ_REQ; access_cache_type == DCACHE_ACC; address == 32'h7905c2ff;})
 
-        `uvm_do_on_with(trans, p_sequencer.cpu_seqr[1], {request_type == READ_REQ; access_cache_type == DCACHE_ACC; address == 32'h7905c2ff;})
+        //`uvm_do_on_with(trans, p_sequencer.cpu_seqr[1], {request_type == READ_REQ; access_cache_type == DCACHE_ACC; address == 32'h7905c2ff;})
+        fork
+            cpu_transaction(0);
+            cpu_transaction(1);
+            cpu_transaction(2);
+            cpu_transaction(3);
+        join
+/*         `uvm_do_on_with(trans, p_sequencer.cpu_seqr[0], {request_type == WRITE_REQ; access_cache_type == DCACHE_ACC; address == 32'h7905c2ff; data == test_data;})
+        `uvm_do_on_with(trans, p_sequencer.cpu_seqr[1], {request_type == WRITE_REQ; access_cache_type == DCACHE_ACC; address == 32'h7905c2ff; data == test_data_1;})
+        `uvm_do_on_with(trans, p_sequencer.cpu_seqr[2], {request_type == WRITE_REQ; access_cache_type == DCACHE_ACC; address == 32'h7905c2ff;})
+        `uvm_do_on_with(trans, p_sequencer.cpu_seqr[3], {request_type == WRITE_REQ; access_cache_type == DCACHE_ACC; address == 32'h7905c2ff;})
 
-        `uvm_do_on_with(trans, p_sequencer.cpu_seqr[0], {request_type == WRITE_REQ; access_cache_type == DCACHE_ACC; address == 32'h7905c2ff; data == test_data;})
-        
-        `uvm_do_on_with(trans_1, p_sequencer.cpu_seqr[1], {request_type == READ_REQ; access_cache_type == DCACHE_ACC; address == 32'h7905c2ff;})
+        `uvm_do_on_with(trans, p_sequencer.cpu_seqr[0], {request_type == WRITE_REQ; access_cache_type == DCACHE_ACC; address == 32'h7905c2ff; data == test_data_2;})
+        `uvm_do_on_with(trans, p_sequencer.cpu_seqr[1], {request_type == WRITE_REQ; access_cache_type == DCACHE_ACC; address == 32'h7905c2ff; data == test_data_2;})
+
+        `uvm_do_on_with(trans, p_sequencer.cpu_seqr[2], {request_type == READ_REQ; access_cache_type == DCACHE_ACC; address == 32'h7905c2ff;})
+
+        repeat(10) begin
+        for(int i =0; i<4; i++)begin
+            `uvm_do_on_with(trans, p_sequencer.cpu_seqr[i], {request_type == WRITE_REQ; access_cache_type == DCACHE_ACC;})
+            addr = trans.address;
+            `uvm_do_on_with(trans, p_sequencer.cpu_seqr[i], {request_type == READ_REQ; access_cache_type == DCACHE_ACC; address == addr;})
+
+        end
+        end */
 
     endtask
 

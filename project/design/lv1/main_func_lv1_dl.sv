@@ -313,7 +313,7 @@ module main_func_lv1_dl #(
                             data_bus_lv1_lv2_reg <= cache_var[{index_snoop,blk_access_snoop}];
                             lv2_wr <= 1'b1;
                             if(lv2_wr_done) begin
-                                `CACHE_CURRENT_MESI_SNOOP <= updated_mesi_proc;
+                                `CACHE_CURRENT_MESI_SNOOP <= updated_mesi_snoop;
                                 lv2_wr                    <= 1'b0;
                                 data_bus_lv1_lv2_reg      <= 32'hz;
                             end

@@ -43,11 +43,13 @@ class back_to_back_read_in_same_address_seq extends base_vseq;
 
     virtual task body();
         //trans.randomize();
+        repeat(10) begin
         for(int i =0; i<4; i++)begin
             `uvm_do_on_with(trans, p_sequencer.cpu_seqr[i], {request_type == WRITE_REQ; access_cache_type == DCACHE_ACC;})
             addr = trans.address;
             `uvm_do_on_with(trans, p_sequencer.cpu_seqr[i], {request_type == READ_REQ; access_cache_type == DCACHE_ACC; address == addr;})
 
+        end
         end
 		
 	endtask
