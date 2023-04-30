@@ -92,35 +92,47 @@ class system_bus_monitor_c extends uvm_monitor;
         //Snoop requests, service time, etc
         
         //Added code //FIX
-            // bus request type:
-            if (vi_sbus_if.bus_rdx === 1'b1)
-                s_packet.bus_req_type = BUS_RDX; 
-            
-            if (vi_sbus_if.invalidate === 1'b1)
-                s_packet.bus_req_type = INVALIDATE; 
             
            // if (vi_sbus_if.ica === 1'b1) //no idea about icache
            //     s_packet.bus_req_type = INVALIDATE; bus_req_snoop 
 
-            //s_packet.bus_req_snoop = vi_sbus_if.bus_lv1_lv2_req_snoop;
-                if (vi_sbus_if.bus_lv1_lv2_req_snoop === 2'd0)
-                    s_packet.bus_req_snoop = 0; 
+            
+			/*
+                if (vi_sbus_if.bus_lv1_lv2_req_snoop == 2'd0)
+                    s_packet.bus_req_snoop = 4'd0; 
                 
-                if (vi_sbus_if.bus_lv1_lv2_req_snoop === 2'd1)
-                    s_packet.bus_req_snoop = 1; 
+                if (vi_sbus_if.bus_lv1_lv2_req_snoop == 2'd1)
+                    s_packet.bus_req_snoop = 4'd1; 
 
-                if (vi_sbus_if.bus_lv1_lv2_req_snoop === 2'd2)
-                    s_packet.bus_req_snoop = 2; 
+                if (vi_sbus_if.bus_lv1_lv2_req_snoop == 2'd2)
+                    s_packet.bus_req_snoop = 4'd2; 
 
-                if (vi_sbus_if.bus_lv1_lv2_req_snoop === 2'd3)
-                    s_packet.bus_req_snoop = 3; 
+                if (vi_sbus_if.bus_lv1_lv2_req_snoop == 2'd3)
+                    s_packet.bus_req_snoop = 4'd3; 
 
-
+			*/
 
             // trigger point for creating the packet
             @(posedge (|vi_sbus_if.bus_lv1_lv2_gnt_proc));
             `uvm_info(get_type_name(), "Packet creation triggered", UVM_LOW)
             s_packet = sbus_packet_c::type_id::create("s_packet", this);
+
+
+			// Snoop req processors
+           	s_packet.bus_req_snoop = 4'h0; 
+            if(vi_sbus_if.bus_lv1_lv2_req_snoop[0] == 1'b1)
+           		s_packet.bus_req_snoop[0] = 1'b1; 
+				
+            if(vi_sbus_if.bus_lv1_lv2_req_snoop[1] == 1'b1)
+           		s_packet.bus_req_snoop[1] = 1'b1; 
+
+            if(vi_sbus_if.bus_lv1_lv2_req_snoop[2] == 1'b1)
+           		s_packet.bus_req_snoop[2] = 1'b1; 
+
+            if(vi_sbus_if.bus_lv1_lv2_req_snoop[3] == 1'b1)
+           		s_packet.bus_req_snoop[3] = 1'b1; 
+
+
 
             // wait for assertion of either bus_rd, bus_rdx or invalidate before monitoring other bus activities
             // lv2_rd for I-cache cases
@@ -139,6 +151,15 @@ class system_bus_monitor_c extends uvm_monitor;
             // bus request type 
             if (vi_sbus_if.bus_rd === 1'b1)
                 s_packet.bus_req_type = BUS_RD;
+            // bus request type:
+            //if (vi_sbus_if.bus_rd == 1'b1)
+            //    s_packet.bus_req_type = BUS_RD; 
+
+            if (vi_sbus_if.bus_rdx === 1'b1)
+                s_packet.bus_req_type = BUS_RDX; 
+            
+            if (vi_sbus_if.invalidate === 1'b1)
+                s_packet.bus_req_type = INVALIDATE; 
 
             // proc which requested the bus access
             case (1'b1)
@@ -156,7 +177,7 @@ class system_bus_monitor_c extends uvm_monitor;
 
                 // to determine which of snoops or L2 serviced read miss
                 begin: req_service_check
-                    if (s_packet.bus_req_type == BUS_RD)
+                    if ((s_packet.bus_req_type == BUS_RD) || (s_packet.bus_req_type == BUS_RDX))
                     begin
                         @(posedge vi_sbus_if.data_in_bus_lv1_lv2);
                         `uvm_info(get_type_name(), "Bus read or bus readX successful", UVM_LOW)
@@ -170,6 +191,7 @@ class system_bus_monitor_c extends uvm_monitor;
                             vi_sbus_if.bus_lv1_lv2_gnt_lv2     : s_packet.req_serviced_by = SERV_L2;
                         endcase
                     end
+					
                 end: req_service_check
 
             join_none : update_info
