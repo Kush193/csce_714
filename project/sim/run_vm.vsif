@@ -16,64 +16,106 @@ group all_test {
 
 
 
-      test test1 {
-      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=read_miss_icache -define TEST1" ;
+      test back_to_back_read_same_adder {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=back_to_back_read_same_adder -define TEST1" ;
            scan_script: "vm_scan.pl ius.flt shell.flt" ;
 	   count : 1;
       };
 
-      test test2 {
-      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=read_miss_icache -define TEST2" ;
+      test back_to_back_write_same_adder {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=back_to_back_write_same_adder -define TEST2" ;
            scan_script: "vm_scan.pl ius.flt shell.flt" ;
 	   count : 1;
       };
 
-      test test3 {
-      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=read_miss_icache -define TEST3" ;
+      test invalidation_test {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=invalidation_test -define TEST3" ;
            scan_script: "vm_scan.pl ius.flt shell.flt" ;
 	   count : 1;
       };
 
-      test test4 {
-      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=read_miss_icache -define TEST4" ;
+      test random_read_write_all_proc {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=random_read_write_all_proc -define TEST4" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 10;
+      };
+
+      test read_followed_by_write {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=read_followed_by_write -define TEST5" ;
            scan_script: "vm_scan.pl ius.flt shell.flt" ;
 	   count : 1;
       };
 
-      test test5 {
-      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=read_miss_icache -define TEST5" ;
+      test read_miss_dcache {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=read_miss_dcache -define TEST6" ;
            scan_script: "vm_scan.pl ius.flt shell.flt" ;
 	   count : 1;
       };
 
-      test test6 {
-      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=read_miss_icache -define TEST6" ;
-           scan_script: "vm_scan.pl ius.flt shell.flt" ;
-	   count : 1;
-      };
-
-      test test7 {
+      test read_miss_icache {
       	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=read_miss_icache -define TEST7" ;
            scan_script: "vm_scan.pl ius.flt shell.flt" ;
 	   count : 1;
       };
 
-      test test8 {
-      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=read_miss_icache -define TEST8" ;
+      test replacement_policy_check {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=replacement_policy_check -define TEST8" ;
            scan_script: "vm_scan.pl ius.flt shell.flt" ;
 	   count : 1;
       };
 
-      test test9 {
-      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=read_miss_icache -define TEST9" ;
+      test Test1_back_to_back_2_reads {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test1_back_to_back_2_reads -define TEST9" ;
            scan_script: "vm_scan.pl ius.flt shell.flt" ;
 	   count : 1;
       };
 
-      test test10 {
-      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=read_miss_icache -define TEST10" ;
+      test Test2_back_to_back_2_writes {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test2_back_to_back_2_writes -define TEST10" ;
            scan_script: "vm_scan.pl ius.flt shell.flt" ;
 	   count : 1;
       };
+	  
+      test Test3_reads_with_unique_tag_same_set {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test3_reads_with_unique_tag_same_set -define TEST11" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 1;
+      };
+
+      test Test4_write_all_proc_read_all_proc_same_addr {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test4_write_all_proc_read_all_proc_same_addr -define TEST12" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 1;
+      };
+
+      test Test5_random_read_write_all_proc {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test5_random_read_write_all_proc -define TEST13" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 1;
+      };
+
+      test write_miss_dcache {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=write_miss_dcache -define TEST14" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 1;
+      };
+
+      test Test6_random_parallel_read_write_all_proc {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test6_random_parallel_read_write_all_proc -define TEST15" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 1;
+      };
+
+      test Test7_inorder_read_parallel_read_all_proc {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test7_inorder_read_parallel_read_all_proc -define TEST16" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 1;
+      };
+
+      test Test8_random_parallel_read_write_all_proc {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test8_random_parallel_read_write_all_proc -define TEST17" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 1;
+      };	  
 
 };

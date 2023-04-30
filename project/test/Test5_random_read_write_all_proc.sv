@@ -44,7 +44,7 @@ class Test5_random_read_write_all_proc_seq extends base_vseq;
 
     virtual task body();
         //trans.randomize(); 
-        repeat(10) begin
+        repeat(1000) begin
             cpu_num = $urandom_range(0,3);
             `uvm_do_on_with(trans, p_sequencer.cpu_seqr[cpu_num], {request_type == WRITE_REQ; access_cache_type == DCACHE_ACC;})
             cpu_num = $urandom_range(0,3);

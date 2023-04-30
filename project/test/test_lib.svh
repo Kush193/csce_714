@@ -21,3 +21,6 @@
 `include "replacement_policy_check.sv"
 `include "Test4_write_all_proc_read_all_proc_same_addr.sv"
 `include "Test5_random_read_write_all_proc.sv"
+`include "Test6_random_parallel_read_write_all_proc.sv"
+`include "Test7_inorder_read_parallel_read_all_proc.sv"
+`include "Test8_random_parallel_read_write_all_proc.sv"

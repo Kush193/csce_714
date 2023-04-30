@@ -19,12 +19,13 @@ class cpu_monitor_c extends uvm_monitor;
         option.name = "cover_cpu_packets";
         REQUEST: coverpoint packet.request_type;
         //TODO: add coverpoints for Data, Address, etc.
-        //lab6
         ADDR_TYPE: coverpoint packet.addr_type;
         DATA: coverpoint packet.dat { option.auto_bin_max = 20; }
-        ADDR_REQ: coverpoint packet.address { option.auto_bin_max = 20; }
-        NUM_CYCLES: coverpoint packet.num_cycles { option.auto_bin_max = 20;}
+        ADDR_REQ: coverpoint packet.address { bins addr_bins[2] = {[0:32'h3FFFFFFF],[32'h40000000:32'hFFFFFFFF]};}
+     
         ILLEGAL: coverpoint packet.illegal;
+
+	  X_REQUEST_ADDR_TYPE : cross REQUEST, ADDR_TYPE {ignore_bins ig = X_REQUEST_ADDR_TYPE with (REQUEST == WRITE_REQ && ADDR_TYPE == ICACHE);}  
 
 
     endgroup
@@ -66,7 +67,7 @@ class cpu_monitor_c extends uvm_monitor;
             packet.address = vi_cpu_lv1_if.addr_bus_cpu_lv1;
 
 //Code Added BEGIN
-            if(vi_cpu_lv1_if.addr_bus_cpu_lv1 < 32'h04000000)
+            if(vi_cpu_lv1_if.addr_bus_cpu_lv1 < 32'h40000000)
             begin
                 packet.addr_type = ICACHE;
             end
@@ -75,7 +76,7 @@ class cpu_monitor_c extends uvm_monitor;
                 packet.addr_type = DCACHE;
             end
 
-            if(vi_cpu_lv1_if.cpu_wr === 1'b1 && vi_cpu_lv1_if.addr_bus_cpu_lv1 < 32'h04000000)
+            if(vi_cpu_lv1_if.cpu_wr === 1'b1 && vi_cpu_lv1_if.addr_bus_cpu_lv1 < 32'h40000000)
             begin
                 packet.illegal = 1'b1;
             end

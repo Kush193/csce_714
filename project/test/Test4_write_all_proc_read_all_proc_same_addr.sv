@@ -42,7 +42,8 @@ class Test4_write_all_proc_read_all_proc_same_addr_seq extends base_vseq;
     endfunction : new
 
     virtual task body();
-        //trans.randomize();        
+        //trans.randomize(); 
+        repeat(100) begin       
             `uvm_do_on_with(trans, p_sequencer.cpu_seqr[0], {request_type == WRITE_REQ; access_cache_type == DCACHE_ACC;})
             addr = trans.address;
             `uvm_do_on_with(trans, p_sequencer.cpu_seqr[1], {request_type == WRITE_REQ; access_cache_type == DCACHE_ACC; address == addr;})
@@ -53,7 +54,7 @@ class Test4_write_all_proc_read_all_proc_same_addr_seq extends base_vseq;
             `uvm_do_on_with(trans, p_sequencer.cpu_seqr[1], {request_type == READ_REQ; access_cache_type == DCACHE_ACC; address == addr;})
             `uvm_do_on_with(trans, p_sequencer.cpu_seqr[2], {request_type == READ_REQ; access_cache_type == DCACHE_ACC; address == addr;})
             `uvm_do_on_with(trans, p_sequencer.cpu_seqr[3], {request_type == READ_REQ; access_cache_type == DCACHE_ACC; address == addr;})
-
+        end
 
 		
 	endtask

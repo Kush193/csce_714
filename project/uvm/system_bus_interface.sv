@@ -139,7 +139,7 @@ interface system_bus_interface(input clk);
         `uvm_error("system_bus_interface",$sformatf("Assertion assert_bus_lv1_lv2_gnt_proc_lv2_rd_or_lv2_wr Failed: bus_lv1_lv2_gnt_proc is asserted and lv2_rd or lv2_wr is not asserted eventually"))
 
 ////ASSERTION7: if bus_rd or bus_rdx is asserted then and lv2_rd should be also asserted  
-    assert_bus_rd_and_lv2_rd: assert property(prop_sig1_same_cycle_sig2(lv2_rd, (bus_rd || bus_rdx)))
+    assert_bus_rd_and_lv2_rd: assert property(prop_sig1_same_cycle_sig2((bus_rd || bus_rdx),lv2_rd))
     else
         `uvm_error("system_bus_interface",$sformatf("Assertion assert_bus_rd_and_lv2_rd Failed: Neither bus_rd nor bus_rdx is asserted in same cylce when lv2_rd is asserted"))
 
