@@ -5,10 +5,10 @@
 // Designers: Pranit, Aditya, Kushagra
 //=====================================================================
 
-class back_to_back_read_in_same_address extends base_test;
+class random_read_write_all_proc extends base_test;
 
     //component macro
-    `uvm_component_utils(back_to_back_read_in_same_address)
+    `uvm_component_utils(random_read_write_all_proc)
 
     //Constructor
     function new(string name, uvm_component parent);
@@ -17,33 +17,33 @@ class back_to_back_read_in_same_address extends base_test;
 
     //UVM build phase
     function void build_phase(uvm_phase phase);
-        uvm_config_wrapper::set(this, "tb.vsequencer.run_phase", "default_sequence", back_to_back_read_in_same_address_seq::type_id::get());
+        uvm_config_wrapper::set(this, "tb.vsequencer.run_phase", "default_sequence", random_read_write_all_proc_seq::type_id::get());
         super.build_phase(phase);
     endfunction : build_phase
 
     //UVM run phase()
     task run_phase(uvm_phase phase);
-        `uvm_info(get_type_name(), "Executing back_to_back_read_in_same_address test" , UVM_LOW)
+        `uvm_info(get_type_name(), "Executing random_read_write_all_proc test" , UVM_LOW)
     endtask: run_phase
 
-endclass : back_to_back_read_in_same_address
+endclass : random_read_write_all_proc
 
 
 // Sequence for a read-miss on D-cache
-class back_to_back_read_in_same_address_seq extends base_vseq;
+class random_read_write_all_proc_seq extends base_vseq;
     //object macro
-    `uvm_object_utils(back_to_back_read_in_same_address_seq)
+    `uvm_object_utils(random_read_write_all_proc_seq)
 	bit [`ADDR_WID_LV1-1 : 0] addr;
     cpu_transaction_c trans;
 
     //constructor
-    function new (string name="back_to_back_read_in_same_address_seq");
+    function new (string name="random_read_write_all_proc_seq");
         super.new(name);
     endfunction : new
 
     virtual task body();
         //trans.randomize();
-        repeat(10) begin
+        repeat(100) begin
         for(int i =0; i<4; i++)begin
             `uvm_do_on_with(trans, p_sequencer.cpu_seqr[i], {request_type == WRITE_REQ; access_cache_type == DCACHE_ACC;})
             addr = trans.address;
@@ -54,4 +54,4 @@ class back_to_back_read_in_same_address_seq extends base_vseq;
 		
 	endtask
 
-endclass : back_to_back_read_in_same_address_seq
+endclass : random_read_write_all_proc_seq

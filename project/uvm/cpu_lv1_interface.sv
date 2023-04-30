@@ -31,10 +31,15 @@ interface cpu_lv1_interface(input clk);
           $rose(signal2) |=> $fell(signal1);
     endproperty
 
-    property prop_sig2_deassert_before_sig1(signal_1,signal_2);
+     property prop_sig2_deassert_before_sig1(signal_1,signal_2);
     @(posedge clk)
         ($past(signal_2) && (!signal_2))  |-> $past(signal_1);
-    endproperty
+    endproperty 
+
+/*     property prop_sig2_deassert_before_sig1(signal_1,signal_2);
+    @(posedge clk)
+        $fell(signal_2) |-> $past(signal_1);
+    endproperty */
 
     property prop_signal2_deassert_after_signal1_deassert(signal1,signal2);
         @(posedge clk)

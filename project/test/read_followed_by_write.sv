@@ -52,7 +52,7 @@ class read_followed_by_write_seq extends base_vseq;
                 
                 addr[0] = 32'h7905c2ff;
                 addr[1] = 32'h8016d5d0;
-                repeat(20)begin
+                repeat(100)begin
                     index = $urandom_range(0,1);
                     if(cpuID == 0 || cpuID == 1) 
                         `uvm_do_on_with(trans[cpuID], p_sequencer.cpu_seqr[cpuID], {request_type == WRITE_REQ; access_cache_type == DCACHE_ACC; address == addr[index];})

@@ -28,24 +28,49 @@ class system_bus_monitor_c extends uvm_monitor;
         }
         //TODO: Add coverage for other fields of sbus_mon_packet
         //LAB6: TO DO: Add coverage for other fields of sbus_mon_packet
-        REQ_SNOOP: coverpoint s_packet.bus_req_snoop;
+        REQ_SNOOP: coverpoint s_packet.bus_req_snoop{
+                               bins simul_1_request = {
+                                                  4'b0001,
+                                                  4'b0010,
+                                                  4'b0100,
+                                                  4'b1000
+                                                };
+                               bins simul_2_request = {
+                                                  4'b0011,
+                                                  4'b0101,
+                                                  4'b0110,
+                                                  4'b1001,
+                                                  4'b1010,
+                                                  4'b1100
+                                                };
+                               bins simul_3_request = {
+                                                  4'b0111,
+                                                  4'b1011,
+                                                  4'b1101,
+                                                  4'b1110
+                                                };}
+
         REQ_SERVICED_BY: coverpoint s_packet.req_serviced_by;
         WR_DATA_SNOOP: coverpoint s_packet.wr_data_snoop{
-            option.auto_bin_max = 20;
+                                bins zero_snoopdata ={0};
+                               bins non_zero_snoopdata[10] = {[1:'hFFFFFFFF]};
         }
         SNOOP_WR_REQ_FLAG: coverpoint s_packet.snoop_wr_req_flag;
         CP_IN_CACHE: coverpoint s_packet.cp_in_cache;
         IS_SHARED: coverpoint s_packet.shared;
-        SERVICE_TIME: coverpoint s_packet.service_time{
-            option.auto_bin_max = 20;
-        }
+
 
         EVICT_DIRTY_BLK_ADDR: coverpoint s_packet.proc_evict_dirty_blk_addr{
-            option.auto_bin_max = 20;
-        }
+                               
+                               bins zero={0};
+                               bins non_zero[10] = {[1:32'hFFFFFFFF]};
+                            }
+
         EVICT_DIRTY_BLK_DATA: coverpoint s_packet.proc_evict_dirty_blk_data{
-            option.auto_bin_max = 20;
+                                bins zero_data ={0};
+                               bins non_zero_data[10] = {[1:'hFFFFFFFF]};
         } 
+
         EVICT_DIRTY_BLK_FLAG: coverpoint s_packet.proc_evict_dirty_blk_flag;       
 
 

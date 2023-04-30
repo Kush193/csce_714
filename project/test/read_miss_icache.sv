@@ -42,7 +42,11 @@ class read_miss_icache_seq extends base_vseq;
     endfunction : new
 
     virtual task body();
-        `uvm_do_on_with(trans, p_sequencer.cpu_seqr[mp], {request_type == READ_REQ; access_cache_type == ICACHE_ACC;})
+    repeat(100) begin
+        for(int i=0; i<4; i++) begin
+            `uvm_do_on_with(trans, p_sequencer.cpu_seqr[i], {request_type == READ_REQ; access_cache_type == ICACHE_ACC;})
+        end
+    end
     endtask
 
 endclass : read_miss_icache_seq
