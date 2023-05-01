@@ -131,7 +131,14 @@ class system_bus_monitor_c extends uvm_monitor;
 
             // wait for assertion of either bus_rd, bus_rdx or invalidate before monitoring other bus activities
             // lv2_rd for I-cache cases
-            @(posedge(vi_sbus_if.bus_rd | vi_sbus_if.bus_rdx | vi_sbus_if.invalidate | vi_sbus_if.lv2_rd));
+            @(posedge(vi_sbus_if.bus_rd | vi_sbus_if.bus_rdx | vi_sbus_if.invalidate | vi_sbus_if.lv2_rd |vi_sbus_if.lv2_wr));
+            if(vi_sbus_if.lv2_wr)
+            begin
+            s_packet.proc_evict_dirty_blk_flag = 1'b1;
+            s_packet.proc_evict_dirty_blk_addr = vi_sbus_if.addr_bus_lv1_lv2;
+            s_packet.proc_evict_dirty_blk_data = vi_sbus_if.data_bus_lv1_lv2;
+             @(posedge(vi_sbus_if.bus_rd | vi_sbus_if.bus_rdx | vi_sbus_if.lv2_rd)); //wait for the actual bus rd/wr operation after dirty block is freed
+            end
             fork
                 begin: cp_in_cache_check
                     // check for cp_in_cache assertion
@@ -151,7 +158,10 @@ class system_bus_monitor_c extends uvm_monitor;
                 s_packet.bus_req_type = BUS_RDX; 
             
             if (vi_sbus_if.invalidate === 1'b1)
-                s_packet.bus_req_type = INVALIDATE; 
+                s_packet.bus_req_type = INVALIDATE;
+
+            else if (vi_sbus_if.lv2_rd === 1'b1)
+                s_packet.bus_req_type = ICACHE_RD; 
 
 
 
@@ -172,6 +182,34 @@ class system_bus_monitor_c extends uvm_monitor;
 		    
             // fork and call tasks
             fork: update_info
+    begin: snoop0_req_check
+                    // check for cp_in_cache assertion
+                    @(posedge vi_sbus_if.bus_lv1_lv2_req_snoop[0]) s_packet.bus_req_snoop[0] = 1'b1;
+                end : snoop0_req_check
+                begin:snoop1_req_check 
+                    // check for cp_in_cache assertion
+                    @(posedge vi_sbus_if.bus_lv1_lv2_req_snoop[1]) s_packet.bus_req_snoop[1] = 1'b1;
+                end : snoop1_req_check
+                begin: snoop2_req_check
+                    // check for cp_in_cache assertion
+                    @(posedge vi_sbus_if.bus_lv1_lv2_req_snoop[2]) s_packet.bus_req_snoop[2] = 1'b1;
+                end : snoop2_req_check
+                begin: snoop3_req_check
+                    // check for cp_in_cache assertion
+                    @(posedge vi_sbus_if.bus_lv1_lv2_req_snoop[3]) s_packet.bus_req_snoop[3] = 1'b1;
+                end : snoop3_req_check
+
+                begin: snoop_wr_check //check for any snoop side write request to lv2
+                     @(posedge vi_sbus_if.lv2_wr)
+                     if(|vi_sbus_if.bus_lv1_lv2_gnt_snoop)
+                     begin
+                     s_packet.snoop_wr_req_flag = 1'b1;
+                     s_packet.wr_data_snoop = vi_sbus_if.data_bus_lv1_lv2;
+                     end
+                end
+                               
+
+
 
                 // to determine which of snoops or L2 serviced read miss
                 begin: req_service_check

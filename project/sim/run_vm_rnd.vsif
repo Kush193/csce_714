@@ -15,16 +15,16 @@ group all_test {
       sv_seed: 1;
 
 
-      test read_miss_icache {
-      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=read_miss_icache" ;
+      test write_miss_icache {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=write_miss_icache -define TEST29" ;
            scan_script: "vm_scan.pl ius.flt shell.flt" ;
 	   count : 1;
-      };
+      };	
 
-      test read_miss_icache_rnd {
-      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=read_miss_icache -svseed random" ;
+      test Test23_write_with_unique_tag_same_set {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test23_write_with_unique_tag_same_set -define TEST30" ;
            scan_script: "vm_scan.pl ius.flt shell.flt" ;
-	   count : 10;
+	   count : 1;
       };
 
 };

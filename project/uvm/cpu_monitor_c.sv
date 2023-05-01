@@ -76,20 +76,17 @@ class cpu_monitor_c extends uvm_monitor;
                 packet.addr_type = DCACHE;
             end
 
-            if(vi_cpu_lv1_if.cpu_wr === 1'b1 && vi_cpu_lv1_if.addr_bus_cpu_lv1 < 32'h40000000)
+            if((vi_cpu_lv1_if.cpu_wr == 1'b1) & (vi_cpu_lv1_if.addr_bus_cpu_lv1[31:30] == 2'b0))
             begin
                 packet.illegal = 1'b1;
-                $display("illegal is set");
             end
             
-            if(vi_cpu_lv1_if.cpu_wr === 1'b0 && vi_cpu_lv1_if.addr_bus_cpu_lv1 >= 32'h40000000)
-            begin
-                packet.illegal = 1'b0;
-            end
 //Code Added ENDED
 
+	if(packet.illegal == 0) begin
             @(posedge vi_cpu_lv1_if.data_in_bus_cpu_lv1 or posedge vi_cpu_lv1_if.cpu_wr_done)
             packet.dat = vi_cpu_lv1_if.data_bus_cpu_lv1;
+        end
             @(negedge vi_cpu_lv1_if.cpu_rd or negedge vi_cpu_lv1_if.cpu_wr)
             mon_out.write(packet);
             cover_cpu_packet.sample();
