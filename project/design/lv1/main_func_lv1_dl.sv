@@ -207,7 +207,7 @@ module main_func_lv1_dl #(
         end
 
         //proc write
-        if(cpu_wr) begin
+        if(cpu_wr && !cp_in_cache) begin //Bug fix 8
             bus_lv1_lv2_req_proc_dl <= 1'b1;
             if(bus_lv1_lv2_gnt_proc) begin
                 bus_rd_reg           <= 1'b0;
@@ -295,7 +295,7 @@ module main_func_lv1_dl #(
         if(blk_hit_snoop && (bus_lv1_lv2_gnt_proc != 1'b1)) begin
             if(invalidate && !invalidation_done) begin
                 shared_local              <= 1'b1;
-                `CACHE_CURRENT_MESI_SNOOP <= updated_mesi_snoop;
+                `CACHE_CURRENT_MESI_SNOOP <= updated_mesi_snoop; //Bug 9 fix
                 invalidation_done         <= 1'b1;
                 $display("inside snoop");
             end
