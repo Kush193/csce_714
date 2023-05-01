@@ -50,8 +50,8 @@ class Test3_reads_with_unique_tag_same_set_seq extends base_vseq;
     endfunction : new
 
     virtual task body();
-        
-        repeat(1)
+        ok = randomize(index);
+        repeat(100)
         begin    
             
            // `uvm_do_on_with(trans, p_sequencer.cpu_seqr[i], {request_type == READ_REQ; access_cache_type == DCACHE_ACC;})
@@ -62,7 +62,7 @@ class Test3_reads_with_unique_tag_same_set_seq extends base_vseq;
                 
                 tag = $urandom_range(32'h40000000,32'hffffffff);
                 cpu_num = $urandom_range(0,3);
-                ok = randomize(index);
+                
                 offset = 0;
                 for(int i =0; i<4; i++) begin
                     addr[i] = {tag + i, index, offset};

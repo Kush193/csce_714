@@ -67,13 +67,53 @@ class cpu_transaction_c extends uvm_sequence_item;
 
 endclass : cpu_transaction_c 
 
-/* class constraint_addr_gen;
-    rand bit [15:0] tag;
-    rand bit [13:0] index;
-    rand bit [1:0] offset;
+class set_address;
 
-    constraint unique_tag {unique {tag};}
+    randc logic [13:0] index;
+    rand  logic [15:0] tag[20];
+    rand  logic [ 1:0] byten[20];
+
+    rand  logic [31:0] set_data_1;
+    rand  logic [31:0] set_data_2;
+    rand  logic [31:0] set_data_3;
+    rand  logic [31:0] set_data_4;
+    rand  logic [31:0] set_data_5;
+
+          logic [31:0] set_addr[20];
+          logic [31:0] set_addr_1;
+          logic [31:0] set_addr_2;
+          logic [31:0] set_addr_3;
+          logic [31:0] set_addr_4;
+          logic [31:0] set_addr_5;
+          logic [31:0] set_addr_6;
+          logic [31:0] set_addr_7;
+          logic [31:0] set_addr_8;
+          logic [31:0] set_addr_9;
+          logic [31:0] set_addr_10;
 
 
-endclass: constraint_addr_gen
- */
+    function void post_randomize;
+       set_addr_1 = {tag[0],index,byten[0]};
+       set_addr_2 = {tag[1],index,byten[1]};
+       set_addr_3 = {tag[2],index,byten[2]};
+       set_addr_4 = {tag[3],index,byten[3]};
+       set_addr_5 = {tag[4],index,byten[4]};
+       set_addr_6 = {tag[5],index,byten[5]};
+       set_addr_7 = {tag[6],index,byten[6]};
+       set_addr_8 = {tag[7],index,byten[7]};
+       set_addr_9 = {tag[8],index,byten[8]};
+       set_addr_10 = {tag[9],index,byten[9]};
+
+       foreach(set_addr[i]) set_addr[i] = {tag[i],index,byten[i]};
+
+    endfunction
+
+    constraint addr_type {
+        //soft tag_1 >= 16'h4000;
+        unique {tag};
+        foreach(tag[i]) soft tag[i] >= 16'h4000;
+    }
+
+
+endclass : set_address
+ 
