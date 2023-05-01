@@ -23,17 +23,20 @@ interface cpu_lv1_interface(input clk);
     logic                          cpu_wr_done             ;
     logic                          data_in_bus_cpu_lv1     ;
 
-    assign data_bus_cpu_lv1 = data_bus_cpu_lv1_reg ;
+    logic address_curr;
 
+    assign data_bus_cpu_lv1 = data_bus_cpu_lv1_reg ;
+    assign address_curr = (addr_bus_cpu_lv1 >= 32'h40000000);
 //Properties
     property prop_signal2_before_signal1(signal1,signal2);
         @(posedge clk)
           $rose(signal2) |=> $fell(signal1);
     endproperty
 
-     property prop_sig2_deassert_before_sig1(signal_1,signal_2);
+     property prop_sig2_deassert_before_sig1(signal_1,signal_2,address_curr);
     @(posedge clk)
-        ($past(signal_2) && (!signal_2))  |-> $past(signal_1);
+        if(address_curr)
+            ($past(signal_2) && (!signal_2))  |-> $past(signal_1);
     endproperty 
 
 /*     property prop_sig2_deassert_before_sig1(signal_1,signal_2);
@@ -56,7 +59,7 @@ interface cpu_lv1_interface(input clk);
     property prop_simult_cpu_wr_rd;
         @(posedge clk)
           not(cpu_rd && cpu_wr);
-    endproperty
+    endproperty 
 
     assert_simult_cpu_wr_rd: assert property (prop_simult_cpu_wr_rd)
     else
@@ -84,9 +87,10 @@ interface cpu_lv1_interface(input clk);
     else
         `uvm_error("cpu_lv1_interface",$sformatf("Assertion assert_data_in_bus_cpu_lv1_cpu_rd_assert Failed: data_in_bus_cpu_lv1 is not asserted after cpu_rd is asserted"))
 
+
 ////ASSERTION6: if cpu_wr deasserted then in previous cyle cpu_wr_done should be high
-assert_cpu_wr_cpu_wr_done: assert property (prop_sig2_deassert_before_sig1(cpu_wr_done,cpu_wr))
-    else
-        `uvm_error("system_bus_interface",$sformatf("Assertion assert_cpu_wr_cpu_wr_done Failed: when cpu_wr deasserted then in previous cyle cpu_wr_done is not high"))  
+    assert_cpu_wr_cpu_wr_done: assert property (prop_sig2_deassert_before_sig1(cpu_wr_done,cpu_wr,address_curr))
+        else
+            `uvm_error("system_bus_interface",$sformatf("Assertion assert_cpu_wr_cpu_wr_done Failed: when cpu_wr deasserted then in previous cyle cpu_wr_done is not high"))  
 
 endinterface

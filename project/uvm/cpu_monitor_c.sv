@@ -23,7 +23,7 @@ class cpu_monitor_c extends uvm_monitor;
         DATA: coverpoint packet.dat { option.auto_bin_max = 20; }
         ADDR_REQ: coverpoint packet.address { bins addr_bins[2] = {[0:32'h3FFFFFFF],[32'h40000000:32'hFFFFFFFF]};}
      
-        ILLEGAL: coverpoint packet.illegal;
+        ILLEGAL: coverpoint packet.illegal { bins legal = {0}; bins not_legal = {1};}
 
 	  X_REQUEST_ADDR_TYPE : cross REQUEST, ADDR_TYPE {ignore_bins ig = X_REQUEST_ADDR_TYPE with (REQUEST == WRITE_REQ && ADDR_TYPE == ICACHE);}  
 
@@ -79,8 +79,10 @@ class cpu_monitor_c extends uvm_monitor;
             if(vi_cpu_lv1_if.cpu_wr === 1'b1 && vi_cpu_lv1_if.addr_bus_cpu_lv1 < 32'h40000000)
             begin
                 packet.illegal = 1'b1;
+                $display("illegal is set");
             end
-            else
+            
+            if(vi_cpu_lv1_if.cpu_wr === 1'b0 && vi_cpu_lv1_if.addr_bus_cpu_lv1 >= 32'h40000000)
             begin
                 packet.illegal = 1'b0;
             end

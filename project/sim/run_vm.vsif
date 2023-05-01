@@ -116,6 +116,85 @@ group all_test {
       	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test8_random_parallel_read_write_all_proc -define TEST17" ;
            scan_script: "vm_scan.pl ius.flt shell.flt" ;
 	   count : 1;
+      };
+
+      test Test_12_read_miss_l1_cache_no_free_modified {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test_12_read_miss_l1_cache_no_free_modified -define TEST18" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 1;
+      };
+
+      test Test_13_write_hit_L1cache_shar_excl_cache {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test_13_write_hit_L1cache_shar_excl_cache -define TEST19" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 1;
+      };
+
+      test Test_14_wr_hit_block_shared {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test_14_wr_hit_block_shared -define TEST20" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 1;
+      };
+
+      test Test_15_write_miss_l1_cache_no_free_exclusive {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test_15_write_miss_l1_cache_no_free_exclusive -define TEST21" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 1;
+      };
+
+      test Test_16_write_miss_dcache_free_blk_shared {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test_16_write_miss_dcache_free_blk_shared -define TEST22" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 1;
+      };
+
+      test Test_17_write_miss_L1cache_free_block_modified_cache {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test_17_write_miss_L1cache_free_block_modified_cache -define TEST23" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 1;
+      };
+
+      test Test_18_write_miss_dcache_replacement_block_modified {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test_18_write_miss_dcache_replacement_block_modified -define TEST24" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 1;
+      };
+
+      test Test_19_l1_cache_lru {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test_19_l1_cache_lru -define TEST25" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 1;
+      };
+
+      test Test_20_icache_ro_dcache_rw {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test_20_icache_ro_dcache_rw -define TEST26" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 1;
+      };
+
+      test Test_21_random_parallel_4_cpu_rd_wr {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test_21_random_parallel_4_cpu_rd_wr -define TEST27" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 1;
+      };
+
+      test Test_22_wr_miss_nofree_block_shrd_or_excl {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test_22_wr_miss_nofree_block_shrd_or_excl -define TEST28" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 1;
+      };
+
+
+      test write_miss_icache {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=write_miss_icache -define TEST29" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 1;
+      };	
+
+      test Test23_write_with_unique_tag_same_set {
+      	   run_script: "cd $ENV(PWD) ; irun -f run_vm.f +UVM_TESTNAME=Test23_write_with_unique_tag_same_set -define TEST30" ;
+           scan_script: "vm_scan.pl ius.flt shell.flt" ;
+	   count : 1;
       };	  
 
 };
